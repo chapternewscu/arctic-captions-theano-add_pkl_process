@@ -1,5 +1,7 @@
 data/coco/val2014.zip
 data/flickr30k/flickr30k-images
+anandlib/
+data/flickr30k/dictionary.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
