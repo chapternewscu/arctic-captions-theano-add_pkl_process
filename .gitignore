@@ -1,3 +1,6 @@
+data/coco/val2014.zip
+data/flickr30k/flickr30k-images
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
