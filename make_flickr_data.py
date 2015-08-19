@@ -39,13 +39,15 @@ image_id_dict = pd.Series(np.array(images.index), index=images)
 caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
 cap = zip(captions, caption_image_id)
 
-for start, end in zip(range(0, len(images)+10000, 1000), range(10000, len(images)+10000, 1000)):
+for start, end in zip(range(0, len(images)+10000, 100), range(10000, len(images)+10000, 100)):
     image_files = images[start:end]
     feat = cnn.get_features(image_list=image_files, layers='conv5_3', layer_sizes=[512,14,14])
     if start == 0:
         feat_flatten_list = scipy.sparse.csr_matrix(np.array(map(lambda x: x.flatten(), feat)))
     else:
         feat_flatten_list = scipy.sparse.vstack([feat_flatten_list, scipy.sparse.csr_matrix(np.array(map(lambda x: x.flatten(), feat)))])
+
+    print "processing images %d to %d" % (start, end)
     ipdb.set_trace()
 
 with open('data/flickr30k/flicker_30k_align.train.pkl', 'wb') as f:
