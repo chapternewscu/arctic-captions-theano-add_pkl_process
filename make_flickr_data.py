@@ -46,8 +46,7 @@ for start, end in zip(range(0, len(images)+10000, 1000), range(10000, len(images
         feat_flatten_list = scipy.sparse.csr_matrix(np.array(map(lambda x: x.flatten(), feat)))
     else:
         feat_flatten_list = scipy.sparse.vstack([feat_flatten_list, scipy.sparse.csr_matrix(np.array(map(lambda x: x.flatten(), feat)))])
-
-ipdb.set_trace()
+    ipdb.set_trace()
 
 with open('data/flickr30k/flicker_30k_align.train.pkl', 'wb') as f:
     cPickle.dump(cap, f)
