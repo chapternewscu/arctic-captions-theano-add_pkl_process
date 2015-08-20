@@ -39,7 +39,7 @@ image_id_dict = pd.Series(np.array(images.index), index=images)
 caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
 cap = zip(captions, caption_image_id)
 
-for start, end in zip(range(0, len(images)+10000, 100), range(10000, len(images)+10000, 100)):
+for start, end in zip(range(0, len(images)+100, 100), range(100, len(images)+100, 100)):
     image_files = images[start:end]
     feat = cnn.get_features(image_list=image_files, layers='conv5_3', layer_sizes=[512,14,14])
     if start == 0:
