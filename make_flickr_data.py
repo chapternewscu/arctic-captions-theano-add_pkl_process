@@ -7,6 +7,7 @@ import ipdb
 import json
 import cPickle
 from sklearn.feature_extraction.text import CountVectorizer
+import pdb
 
 annotation_path = 'data/flickr30k/results_20130124.token'
 vgg_deploy_path = 'VGG_ILSVRC_16_layers_deploy.prototxt'
@@ -40,7 +41,8 @@ caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
 cap = zip(captions, caption_image_id)
 
 # split up into train, test, and dev
-all_idx = np.random.shuffle(range(31784))
+all_idx = range(len(images))
+np.random.shuffle(all_idx)
 train_idx  = all_idx[0:25000]
 test_idx = all_idx[25000:30000]
 dev_idx = all_idx[30000:]

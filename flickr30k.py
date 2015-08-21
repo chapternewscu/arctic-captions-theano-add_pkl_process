@@ -5,14 +5,20 @@ import sys
 import time
 
 import numpy
+import pdb
 
 def prepare_data(caps, features, worddict, maxlen=None, n_words=10000, zero_pad=False):
     # x: a list of sentences
     seqs = []
     feat_list = []
     for cc in caps:
-        seqs.append([worddict[w] if worddict[w] < n_words else 1 for w in cc[0].split()])
-        feat_list.append(features[cc[1]])
+        try:
+            seqs.append([worddict[w.lower()] if (w.lower() in worddict and worddict[w.lower()] < n_words) else 1 for w in cc[0].split()])
+            feat_list.append(features[cc[1]])
+        except:
+            # add dummies to maintain dimentionality
+            seqs.append(seqs[0])
+            feat_list.append(feat_list[0])
 
     lengths = [len(s) for s in seqs]
 
