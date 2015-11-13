@@ -14,6 +14,7 @@ def prepare_data(caps, features, worddict, maxlen=None, n_words=10000, zero_pad=
     for cc in caps:
         try:
             seqs.append([worddict[w.lower()] if (w.lower() in worddict and worddict[w.lower()] < n_words) else 1 for w in cc[0].split()])
+            pdb.set_trace()
             feat_list.append(features[cc[1]])
         except:
             # add dummies to maintain dimentionality
@@ -71,28 +72,28 @@ def load_data(load_train=True, load_dev=True, load_test=True, path='./'):
     print '... loading data'
 
     if load_train:
-        with open(path+'flicker_30k_align.train.pkl', 'rb') as f:
+        with open(os.path.join(path, 'flickr30k', 'flicker_30k_align.train.pkl'), 'rb') as f:
             train_cap = pkl.load(f)
             train_feat = pkl.load(f)
         train = (train_cap, train_feat)
     else:
         train = None
     if load_test:
-        with open(path+'flicker_30k_align.test.pkl', 'rb') as f:
+        with open(os.path.join(path, 'flickr30k', 'flicker_30k_align.test.pkl'), 'rb') as f:
             test_cap = pkl.load(f)
             test_feat = pkl.load(f)
         test = (test_cap, test_feat)
     else:
         test = None
     if load_dev:
-        with open(path+'flicker_30k_align.dev.pkl', 'rb') as f:
+        with open(os.path.join(path, 'flickr30k', 'flicker_30k_align.dev.pkl'), 'rb') as f:
             dev_cap = pkl.load(f)
             dev_feat = pkl.load(f)
         valid = (dev_cap, dev_feat)
     else:
         valid = None
 
-    with open(path+'dictionary.pkl', 'rb') as f:
+    with open(os.path.join(path, 'flickr30k', 'dictionary.pkl'), 'rb') as f:
         worddict = pkl.load(f)
 
     return train, valid, test, worddict

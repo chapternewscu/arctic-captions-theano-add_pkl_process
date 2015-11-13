@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/home/ubuntu/arctic-captions')
+sys.path.insert(0, '../../')
 
 from capgen import train
 

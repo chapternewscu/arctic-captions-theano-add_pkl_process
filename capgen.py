@@ -35,6 +35,8 @@ import flickr8k
 import flickr30k
 import coco
 
+import pdb
+
 
 # datasets: 'name', 'load_data: returns iterator', 'prepare_data: some preprocessing'
 datasets = {'flickr8k': (flickr8k.load_data, flickr8k.prepare_data),
@@ -939,7 +941,8 @@ def gen_sample(tparams, f_init, f_next, ctx0, options,
             # get the corresponding hypothesis and append the predicted word
             for idx, [ti, wi] in enumerate(zip(trans_indices, word_indices)):
                 new_hyp_samples.append(hyp_samples[ti]+[wi])
-                new_hyp_scores[idx] = copy.copy(costs[ti]) # copy in the cost of that hypothesis
+                new_hyp_scores[idx] = copy.copy(costs[idx]) # copy in the cost of that hypothesis
+
                 for lidx in xrange(options['n_layers_lstm']):
                     new_hyp_states[lidx].append(copy.copy(next_state[lidx][ti]))
                 for lidx in xrange(options['n_layers_lstm']):
@@ -1094,6 +1097,7 @@ def train(dim_word=100,  # word vector dimensionality
           validFreq=1000,
           saveFreq=1000,  # save the parameters after every saveFreq updates
           sampleFreq=100,  # generate some samples after every sampleFreq updates
+          data_path='./data',  # path to find data
           dataset='flickr8k',
           dictionary=None,  # word dictionary
           use_dropout=False,  # setting this true turns on dropout at various points
@@ -1116,7 +1120,7 @@ def train(dim_word=100,  # word vector dimensionality
 
     print 'Loading data'
     load_data, prepare_data = get_dataset(dataset)
-    train, valid, test, worddict = load_data()
+    train, valid, test, worddict = load_data(path=data_path)
 
     # index 0 and 1 always code for the end of sentence and unknown token
     word_idict = dict()
@@ -1216,6 +1220,7 @@ def train(dim_word=100,  # word vector dimensionality
 
     # [See note in section 4.3 of paper]
     train_iter = HomogeneousData(train, batch_size=batch_size, maxlen=maxlen)
+    pdb.set_trace()
 
     if valid:
         kf_valid = KFold(len(valid[0]), n_folds=len(valid[0])/valid_batch_size, shuffle=False)
@@ -1387,4 +1392,4 @@ def train(dim_word=100,  # word vector dimensionality
 
 
 if __name__ == '__main__':
-    pass
+    train(dataset='flickr30k')

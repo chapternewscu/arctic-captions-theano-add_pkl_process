@@ -9,6 +9,9 @@ import cPickle
 from sklearn.feature_extraction.text import CountVectorizer
 import pdb
 
+TRAIN_SIZE = 25000
+TEST_SIZE = 5000
+
 annotation_path = 'data/flickr30k/results_20130124.token'
 vgg_deploy_path = 'VGG_ILSVRC_16_layers_deploy.prototxt'
 vgg_model_path  = '/home/ubuntu/captionly/cnn_params/VGG_ILSVRC_16_layers.caffemodel'
@@ -37,20 +40,24 @@ with open('data/flickr30k/dictionary.pkl', 'wb') as f:
 images = pd.Series(annotations['image'].unique())
 image_id_dict = pd.Series(np.array(images.index), index=images)
 
+DEV_SIZE = len(images) - TRAIN_SIZE - TEST_SIZE
+
 caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
 cap = zip(captions, caption_image_id)
 
 # split up into train, test, and dev
 all_idx = range(len(images))
 np.random.shuffle(all_idx)
-train_idx  = all_idx[0:25000]
-test_idx = all_idx[25000:30000]
-dev_idx = all_idx[30000:]
+train_idx = all_idx[0:TRAIN_SIZE]
+test_idx = all_idx[TRAIN_SIZE:TRAIN_SIZE+TEST_SIZE]
+dev_idx = all_idx[TRAIN_SIZE+TEST_SIZE:]
 
 # training set
 images_train = images[train_idx]
 image_id_dict_train = image_id_dict[train_idx]
-caption_image_id_train = caption_image_id[train_idx]
+orig_caption_image_id_train = caption_image_id[train_idx]
+# Reindex the training set
+caption_image_id_train = xrange(TRAIN_SIZE)
 captions_train = captions[train_idx]
 cap_train = zip(captions_train, caption_image_id_train)
 
@@ -71,7 +78,9 @@ with open('data/flickr30k/flicker_30k_align.train.pkl', 'wb') as f:
 # test set
 images_test = images[test_idx]
 image_id_dict_test = image_id_dict[test_idx]
-caption_image_id_test = caption_image_id[test_idx]
+orig_caption_image_id_test = caption_image_id[test_idx]
+# Reindex the test set
+caption_image_id_test = xrange(TEST_SIZE)
 captions_test = captions[test_idx]
 cap_test = zip(captions_test, caption_image_id_test)
 
@@ -92,7 +101,9 @@ with open('data/flickr30k/flicker_30k_align.test.pkl', 'wb') as f:
 # dev set
 images_dev = images[dev_idx]
 image_id_dict_dev = image_id_dict[dev_idx]
-caption_image_id_dev = caption_image_id[dev_idx]
+orig_caption_image_id_dev = caption_image_id[dev_idx]
+# Reindex the dev set
+caption_image_id_dev = xrange(DEV_SIZE)
 captions_dev = captions[dev_idx]
 cap_dev = zip(captions_dev, caption_image_id_dev)
 
