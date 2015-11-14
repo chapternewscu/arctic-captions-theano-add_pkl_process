@@ -50,16 +50,23 @@ cap = zip(captions, caption_image_id)
 all_idx = range(len(images))
 np.random.shuffle(all_idx)
 train_idx = all_idx[0:TRAIN_SIZE]
+train_ext_idx = [i for idx in train_idx for i in xrange(idx*5, (idx*5)+5)]
 test_idx = all_idx[TRAIN_SIZE:TRAIN_SIZE+TEST_SIZE]
+test_ext_idx = [i for idx in test_idx for i in xrange(idx*5, (idx*5)+5)]
 dev_idx = all_idx[TRAIN_SIZE+TEST_SIZE:]
+dev_ext_idx = [i for idx in dev_idx for i in xrange(idx*5, (idx*5)+5)]
 
-# training set
+## TRAINING SET
+
+# Select training images and captions
 images_train = images[train_idx]
-image_id_dict_train = image_id_dict[train_idx]
-orig_caption_image_id_train = caption_image_id[train_idx]
-# Reindex the training set
-caption_image_id_train = xrange(TRAIN_SIZE)
-captions_train = captions[train_idx]
+captions_train = captions[train_ext_idx]
+
+# Reindex the training images
+image_id_dict_train = pd.Series(np.array(images_train.index), index=images_train)
+# Create list of image ids corresponding to each caption
+caption_image_id_train = [image_id_dict_train[img] for img in images_train for i in xrange(5)]
+# Create tuples of caption and image id
 cap_train = zip(captions_train, caption_image_id_train)
 
 for start, end in zip(range(0, len(images_train)+100, 100), range(100, len(images_train)+100, 100)):
@@ -76,13 +83,17 @@ with open('data/flickr30k/flicker_30k_align.train.pkl', 'wb') as f:
     cPickle.dump(cap_train, f)
     cPickle.dump(feat_flatten_list_train, f)
 
-# test set
+## TEST SET
+
+# Select test images and captions
 images_test = images[test_idx]
-image_id_dict_test = image_id_dict[test_idx]
-orig_caption_image_id_test = caption_image_id[test_idx]
-# Reindex the test set
-caption_image_id_test = xrange(TEST_SIZE)
-captions_test = captions[test_idx]
+captions_test = captions[test_ext_idx]
+
+# Reindex the test images
+image_id_dict_test = pd.Series(np.array(images_test.index), index=images_test)
+# Create list of image ids corresponding to each caption
+caption_image_id_test = [image_id_dict_test[img] for img in images_test for i in xrange(5)]
+# Create tuples of caption and image id
 cap_test = zip(captions_test, caption_image_id_test)
 
 for start, end in zip(range(0, len(images_test)+100, 100), range(100, len(images_test)+100, 100)):
@@ -99,13 +110,17 @@ with open('data/flickr30k/flicker_30k_align.test.pkl', 'wb') as f:
     cPickle.dump(cap_test, f)
     cPickle.dump(feat_flatten_list_test, f)
 
-# dev set
+## DEV SET
+
+# Select dev images and captions
 images_dev = images[dev_idx]
-image_id_dict_dev = image_id_dict[dev_idx]
-orig_caption_image_id_dev = caption_image_id[dev_idx]
-# Reindex the dev set
-caption_image_id_dev = xrange(DEV_SIZE)
-captions_dev = captions[dev_idx]
+captions_dev = captions[dev_ext_idx]
+
+# Reindex the dev images
+image_id_dict_dev = pd.Series(np.array(images_dev.index), index=images_dev)
+# Create list of image ids corresponding to each caption
+caption_image_id_dev = [image_id_dict_dev[img] for img in images_dev for i in xrange(5)]
+# Create tuples of caption and image id
 cap_dev = zip(captions_dev, caption_image_id_dev)
 
 for start, end in zip(range(0, len(images_dev)+100, 100), range(100, len(images_dev)+100, 100)):
