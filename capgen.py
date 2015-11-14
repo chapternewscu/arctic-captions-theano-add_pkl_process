@@ -1220,7 +1220,6 @@ def train(dim_word=100,  # word vector dimensionality
 
     # [See note in section 4.3 of paper]
     train_iter = HomogeneousData(train, batch_size=batch_size, maxlen=maxlen)
-    pdb.set_trace()
 
     if valid:
         kf_valid = KFold(len(valid[0]), n_folds=len(valid[0])/valid_batch_size, shuffle=False)

@@ -14,7 +14,6 @@ def prepare_data(caps, features, worddict, maxlen=None, n_words=10000, zero_pad=
     for cc in caps:
         try:
             seqs.append([worddict[w.lower()] if (w.lower() in worddict and worddict[w.lower()] < n_words) else 1 for w in cc[0].split()])
-            pdb.set_trace()
             feat_list.append(features[cc[1]])
         except:
             # add dummies to maintain dimentionality
