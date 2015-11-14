@@ -43,7 +43,7 @@ DEV_SIZE = len(images) - TRAIN_SIZE - TEST_SIZE
 
 caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
 cap = zip(captions, caption_image_id)
-pdb.set_trace()
+
 # split up into train, test, and dev
 all_idx = range(len(images))
 np.random.shuffle(all_idx)
