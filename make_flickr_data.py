@@ -1,9 +1,8 @@
-from anandlib.caffe_cnn import *
+from anandlib.dl.caffe_cnn import *
 import pandas as pd
 import numpy as np
 import os
 import scipy
-import ipdb
 import json
 import cPickle
 from sklearn.feature_extraction.text import CountVectorizer
@@ -26,6 +25,8 @@ cnn = CNN(deploy=vgg_deploy_path,
 annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['image', 'caption'])
 annotations['image_num'] = annotations['image'].map(lambda x: x.split('#')[1])
 annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_image_path,x.split('#')[0]))
+
+pdb.set_trace()
 
 captions = annotations['caption'].values
 
