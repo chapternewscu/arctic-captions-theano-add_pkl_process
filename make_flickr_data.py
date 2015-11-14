@@ -26,8 +26,6 @@ annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['imag
 annotations['image_num'] = annotations['image'].map(lambda x: x.split('#')[1])
 annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_image_path,x.split('#')[0]))
 
-pdb.set_trace()
-
 captions = annotations['caption'].values
 
 vectorizer = CountVectorizer().fit(captions)
@@ -45,7 +43,7 @@ DEV_SIZE = len(images) - TRAIN_SIZE - TEST_SIZE
 
 caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
 cap = zip(captions, caption_image_id)
-
+pdb.set_trace()
 # split up into train, test, and dev
 all_idx = range(len(images))
 np.random.shuffle(all_idx)
