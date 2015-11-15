@@ -56,7 +56,7 @@ def gen_model(queue, rqueue, pid, model, options, k, normalize, word_idict, samp
         seq = _gencap(context)
         rqueue.put((idx, seq))
 
-    return 
+    return
 
 def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datasets='dev,test', sampling=False, pkl_name=None):
     # load model model_options
@@ -67,7 +67,7 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
 
     # fetch data, skip ones we aren't using to save time
     load_data, prepare_data = get_dataset(options['dataset'])
-    _, valid, test, worddict = load_data(load_train=False, load_dev=True if 'dev' in datasets else False,
+    _, valid, test, worddict = load_data(path='./data', load_train=False, load_dev=True if 'dev' in datasets else False,
                                              load_test=True if 'test' in datasets else False)
 
     # <eos> means end of sequence (aka periods), UNK means unknown
@@ -82,7 +82,7 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
     rqueue = Queue()
     processes = [None] * n_process
     for midx in xrange(n_process):
-        processes[midx] = Process(target=gen_model, 
+        processes[midx] = Process(target=gen_model,
                                   args=(queue,rqueue,midx,model,options,k,normalize,word_idict, sampling))
         processes[midx].start()
 

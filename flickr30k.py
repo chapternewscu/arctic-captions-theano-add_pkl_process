@@ -17,7 +17,6 @@ def prepare_data(caps, features, worddict, maxlen=None, n_words=10000, zero_pad=
             feat_list.append(features[cc[1]])
         except:
             # add dummies to maintain dimentionality
-            pdb.set_trace()
             seqs.append(seqs[0])
             feat_list.append(feat_list[0])
 
