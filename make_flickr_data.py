@@ -61,6 +61,7 @@ images_train = images[train_idx]
 captions_train = captions[train_ext_idx]
 
 # Reindex the training images
+images_train.index = xrange(TRAIN_SIZE)
 image_id_dict_train = pd.Series(np.array(images_train.index), index=images_train)
 # Create list of image ids corresponding to each caption
 caption_image_id_train = [image_id_dict_train[img] for img in images_train for i in xrange(5)]
@@ -88,6 +89,7 @@ images_test = images[test_idx]
 captions_test = captions[test_ext_idx]
 
 # Reindex the test images
+images_test.index = xrange(TEST_SIZE)
 image_id_dict_test = pd.Series(np.array(images_test.index), index=images_test)
 # Create list of image ids corresponding to each caption
 caption_image_id_test = [image_id_dict_test[img] for img in images_test for i in xrange(5)]
@@ -115,6 +117,7 @@ images_dev = images[dev_idx]
 captions_dev = captions[dev_ext_idx]
 
 # Reindex the dev images
+images_dev.index = xrange(DEV_SIZE)
 image_id_dict_dev = pd.Series(np.array(images_dev.index), index=images_dev)
 # Create list of image ids corresponding to each caption
 caption_image_id_dev = [image_id_dict_dev[img] for img in images_dev for i in xrange(5)]
