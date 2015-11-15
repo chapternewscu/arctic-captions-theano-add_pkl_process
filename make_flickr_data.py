@@ -26,6 +26,8 @@ annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['imag
 annotations['image_num'] = annotations['image'].map(lambda x: x.split('#')[1])
 annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_image_path,x.split('#')[0]))
 
+pdb.set_trace()
+
 captions = annotations['caption'].values
 
 vectorizer = CountVectorizer().fit(captions)
