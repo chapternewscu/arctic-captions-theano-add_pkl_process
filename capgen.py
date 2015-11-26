@@ -21,7 +21,7 @@ from sklearn.cross_validation import KFold
 
 import warnings
 
-from util import ortho_weight, norm_weight, tanh
+from util import ortho_weight, norm_weight, tanh, rectifier, linear
 
 from util import dropout_layer, _p
 
