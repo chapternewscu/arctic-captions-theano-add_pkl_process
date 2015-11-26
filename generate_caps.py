@@ -7,10 +7,10 @@ import argparse
 import numpy
 import cPickle as pkl
 
+from util import load_params, init_tparams
+
 from capgen import build_sampler, gen_sample, \
-                   load_params, \
                    init_params, \
-                   init_tparams, \
                    get_dataset \
 
 from multiprocessing import Process, Queue

@@ -5,11 +5,6 @@ import cPickle as pkl
 from capgen import init_params, get_dataset, build_sampler, gen_sample
 from util import load_params, init_tparams
 
-# Helper functions
-
-import sys
-import pdb
-
 # single instance of a sampling process
 def gen_model(idx, context, model, options, k, normalize, word_idict, sampling):
     import theano
