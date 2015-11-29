@@ -26,8 +26,6 @@ annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['imag
 annotations['image_num'] = annotations['image'].map(lambda x: x.split('#')[1])
 annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_image_path,x.split('#')[0]))
 
-pdb.set_trace()
-
 captions = annotations['caption'].values
 
 vectorizer = CountVectorizer().fit(captions)
@@ -35,8 +33,14 @@ dictionary = vectorizer.vocabulary_
 dictionary_series = pd.Series(dictionary.values(), index=dictionary.keys()) + 2
 dictionary = dictionary_series.to_dict()
 
+# Sort dictionary in descending order
+from collections import OrderedDict
+dictionary = OrderedDict(sorted(dictionary.items(), key=lambda x:x[1], reverse=True))
+
 with open('data/flickr30k/dictionary.pkl', 'wb') as f:
     cPickle.dump(dictionary, f)
+
+pdb.set_trace()
 
 images = pd.Series(annotations['image'].unique())
 image_id_dict = pd.Series(np.array(images.index), index=images)
