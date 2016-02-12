@@ -42,7 +42,7 @@ def main(params):
                            dispFreq=1,
                            saveFreq=1000,
                            sampleFreq=250,
-                           dataset="coco",
+                           dataset="flickr8k",
                            use_dropout=params["use-dropout"],
                            use_dropout_lstm=params["use-dropout-lstm"],
                            save_per_epoch=params["save-per-epoch"])

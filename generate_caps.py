@@ -7,31 +7,14 @@ import argparse
 import numpy
 import cPickle as pkl
 
-from util import load_params, init_tparams
-
 from capgen import build_sampler, gen_sample, \
+                   load_params, \
                    init_params, \
+                   init_tparams, \
                    get_dataset \
 
 from multiprocessing import Process, Queue
 
-# Helper functions
-
-import sys
-import pdb
-
-class ForkedPdb(pdb.Pdb):
-    """A Pdb subclass that  may be used
-    from a forked multiprocessing child
-
-    """
-    def interaction(self, *args, **kwargs):
-        _stdin = sys.stdin
-        try:
-            sys.stdin = file('/dev/stdin')
-            pdb.Pdb.interaction(self, *args, **kwargs)
-        finally:
-            sys.stdin = _stdin
 
 # single instance of a sampling process
 def gen_model(queue, rqueue, pid, model, options, k, normalize, word_idict, sampling):
@@ -69,15 +52,11 @@ def gen_model(queue, rqueue, pid, model, options, k, normalize, word_idict, samp
             break
 
         idx, context = req[0], req[1]
-
-        print "Processing example %d in process # %d" % (idx, pid)
+        print pid, '-', idx
         seq = _gencap(context)
-        print seq
         rqueue.put((idx, seq))
-        print "Added example %d to the result queue" % idx
 
-    print "gen_model process w/ pid %d has returned..." % pid
-    return
+    return 
 
 def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datasets='dev,test', sampling=False, pkl_name=None):
     # load model model_options
@@ -88,7 +67,7 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
 
     # fetch data, skip ones we aren't using to save time
     load_data, prepare_data = get_dataset(options['dataset'])
-    _, valid, test, worddict = load_data(path='./data', load_train=False, load_dev=True if 'dev' in datasets else False,
+    _, valid, test, worddict = load_data(load_train=False, load_dev=True if 'dev' in datasets else False,
                                              load_test=True if 'test' in datasets else False)
 
     # <eos> means end of sequence (aka periods), UNK means unknown
@@ -103,7 +82,7 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
     rqueue = Queue()
     processes = [None] * n_process
     for midx in xrange(n_process):
-        processes[midx] = Process(target=gen_model,
+        processes[midx] = Process(target=gen_model, 
                                   args=(queue,rqueue,midx,model,options,k,normalize,word_idict, sampling))
         processes[midx].start()
 
@@ -147,15 +126,14 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
         if dd == 'dev':
             print 'Development Set...',
             _send_jobs(valid[1])
-            caps = _seqs2words(_retrieve_jobs(valid[1].shape[0]))
-            import pdb; pdb.set_trace()
+            caps = _seqs2words(_retrieve_jobs(len(valid[1])))
             with open(saveto+'.dev.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'
         if dd == 'test':
             print 'Test Set...',
             _send_jobs(test[1])
-            caps = _seqs2words(_retrieve_jobs(test[1].shape[0]))
+            caps = _seqs2words(_retrieve_jobs(len(test[1])))
             with open(saveto+'.test.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'
