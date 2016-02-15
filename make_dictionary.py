@@ -33,6 +33,7 @@ cnn = CNN(deploy=vgg_deploy_path,
 
 def my_tokenizer(s):
     return s.split()
+pdb.set_trace()
 
 annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['image', 'caption'])
 annotations['image_num'] = annotations['image'].map(lambda x: x.split('#')[1])
@@ -40,7 +41,7 @@ annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_im
 
 captions = annotations['caption'].values
 
-vectorizer = CountVectorizer(lowercase=False, tokenizer=my_tokenizer).fit(captions)
+vectorizer = CountVectorizer(lowercase=False, analyzer=str.split).fit(captions)
 dictionary = vectorizer.vocabulary_
 dictionary_series = pd.Series(dictionary.values(), index=dictionary.keys()) + 2
 

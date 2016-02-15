@@ -9,7 +9,6 @@ from anandlib.dl.caffe_cnn import *
 import pandas as pd
 import numpy as np
 import os
-import nltk
 import scipy
 import json
 import cPickle
@@ -17,14 +16,13 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.tokenize import TreebankWordTokenizer
 import pdb
 
-TRAIN_SIZE = 6000
-TEST_SIZE = 1000
+TRAIN_SIZE = 25000
+TEST_SIZE = 3000
 
-annotation_path = '/home/intuinno/project/pointTeach/data/Flicker8k/Flickr8k.token.txt'
+annotation_path = 'data/flickr30k/results_20130124.token'
 vgg_deploy_path = '/home/intuinno/codegit/caffe/models/vgg_ilsvrc_19/VGG_ILSVRC_19_layers_deploy.prototxt'
 vgg_model_path  = '/home/intuinno/codegit/caffe/models/vgg_ilsvrc_19/VGG_ILSVRC_19_layers.caffemodel'
-flickr_image_path = '/home/intuinno/project/pointTeach/data/Flicker8k/preprocessedImages'
-feat_path='feat/flickr8k'
+flickr_image_path = 'data/flickr30k/processedImages'
 
 def my_tokenizer(s):
     return s.split()
@@ -41,21 +39,17 @@ annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_im
 
 captions = annotations['caption'].values
 
-words = nltk.FreqDist(' '.join(captions).split()).most_common()
+vectorizer = CountVectorizer(lowercase=False, tokenizer=my_tokenizer).fit(captions)
+dictionary = vectorizer.vocabulary_
+dictionary_series = pd.Series(dictionary.values(), index=dictionary.keys()) + 2
+dictionary = dictionary_series.to_dict()
 
-wordsDict = {i+2: words[i][0] for i in range(len(words))}
+# Sort dictionary in descending order
+from collections import OrderedDict
+dictionary = OrderedDict(sorted(dictionary.items(), key=lambda x:x[1], reverse=True))
 
-# vectorizer = CountVectorizer(token_pattern='\\b\\w+\\b').fit(captions)
-# dictionary = vectorizer.vocabulary_
-# dictionary_series = pd.Series(dictionary.values(), index=dictionary.keys()) + 2
-# dictionary = dictionary_series.to_dict()
-
-# # Sort dictionary in descending order
-# from collections import OrderedDict
-# dictionary = OrderedDict(sorted(dictionary.items(), key=lambda x:x[1], reverse=True))
-
-with open('dictionary.pkl', 'wb') as f:
-    cPickle.dump(wordsDict, f)
+with open('data/flickr30k/dictionary.pkl', 'wb') as f:
+    cPickle.dump(dictionary, f)
 
 
 images = pd.Series(annotations['image'].unique())
@@ -100,10 +94,9 @@ for start, end in zip(range(0, len(images_train)+100, 100), range(100, len(image
 
     print "processing images %d to %d" % (start, end)
 
-with open('data/flickr8k/flicker_8k_align.train.pkl', 'wb') as f:
-    cPickle.dump(cap_train, f,-1)
+with open('data/flickr30k/flicker_30k_align.train.pkl', 'wb') as f:
+    cPickle.dump(cap_train, f)
     cPickle.dump(feat_flatten_list_train, f)
-    pdb.set_trace()
 
 ## TEST SET
 
@@ -129,7 +122,7 @@ for start, end in zip(range(0, len(images_test)+100, 100), range(100, len(images
 
     print "processing images %d to %d" % (start, end)
 
-with open('data/flickr8k/flicker_8k_align.test.pkl', 'wb') as f:
+with open('data/flickr30k/flicker_30k_align.test.pkl', 'wb') as f:
     cPickle.dump(cap_test, f)
     cPickle.dump(feat_flatten_list_test, f)
 
@@ -157,6 +150,6 @@ for start, end in zip(range(0, len(images_dev)+100, 100), range(100, len(images_
 
     print "processing images %d to %d" % (start, end)
 
-with open('data/flickr8k/flicker_8k_align.dev.pkl', 'wb') as f:
+with open('data/flickr30k/flicker_30k_align.dev.pkl', 'wb') as f:
     cPickle.dump(cap_dev, f)
     cPickle.dump(feat_flatten_list_dev, f)

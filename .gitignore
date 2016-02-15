@@ -6,6 +6,9 @@ anandlib/
 .ipynb_checkpoints/
 *~
 *.npz
+*.gz
+data/
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

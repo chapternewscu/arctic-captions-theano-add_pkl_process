@@ -101,9 +101,8 @@ for start, end in zip(range(0, len(images_train)+100, 100), range(100, len(image
     print "processing images %d to %d" % (start, end)
 
 with open('data/flickr8k/flicker_8k_align.train.pkl', 'wb') as f:
-    cPickle.dump(cap_train, f,-1)
+    cPickle.dump(cap_train, f)
     cPickle.dump(feat_flatten_list_train, f)
-    pdb.set_trace()
 
 ## TEST SET
 
