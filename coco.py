@@ -5,6 +5,16 @@ import sys
 import time
 
 import numpy
+from scipy.sparse import csr_matrix
+
+def save_sparse_csr(filename,array):
+    numpy.savez(filename,data = array.data ,indices=array.indices,
+             indptr =array.indptr, shape=array.shape )
+
+def load_sparse_csr(filename):
+    loader = numpy.load(filename)
+    return csr_matrix((  loader['data'], loader['indices'], loader['indptr']),
+                         shape = loader['shape'])
 
 
 def prepare_data(caps, features, worddict, maxlen=None, n_words=10000, zero_pad=False):
@@ -74,7 +84,7 @@ def load_data(load_train=True, load_dev=True, load_test=True, path='./data/coco/
     if load_train:
         with open(path+'coco_align.train.pkl', 'rb') as f:
             train_cap = pkl.load(f)
-            train_feat = pkl.load(f)
+        train_feat = load_sparse_csr(path+'coco_feature.train.npz')
         train = (train_cap, train_feat)
 
     if load_dev:
