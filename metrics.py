@@ -5,6 +5,8 @@ using the COCO metrics scripts
 import argparse
 import logging
 
+import sys
+sys.path.append('/home/intuinno/codegit/coco-caption')
 # this requires the coco-caption package, https://github.com/tylin/coco-caption
 from pycocoevalcap.bleu.bleu import Bleu
 from pycocoevalcap.rouge.rouge import Rouge

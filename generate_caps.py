@@ -66,6 +66,8 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
         options = pkl.load(f)
 
     # fetch data, skip ones we aren't using to save time
+    # import pdb; pdb.set_trace()
+    
     load_data, prepare_data = get_dataset(options['dataset'])
     _, valid, test, worddict = load_data(load_train=False, load_dev=True if 'dev' in datasets else False,
                                              load_test=True if 'test' in datasets else False)
@@ -126,14 +128,19 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
         if dd == 'dev':
             print 'Development Set...',
             _send_jobs(valid[1])
-            caps = _seqs2words(_retrieve_jobs(len(valid[1])))
+            # caps = _seqs2words(_retrieve_jobs(len(valid[1])))
+            caps = _seqs2words(_retrieve_jobs(valid[1].shape[0]))
+            # import pdb; pdb.set_trace()
             with open(saveto+'.dev.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'
+
         if dd == 'test':
             print 'Test Set...',
             _send_jobs(test[1])
-            caps = _seqs2words(_retrieve_jobs(len(test[1])))
+            # caps = _seqs2words(_retrieve_jobs(len(test[1])))
+            caps = _seqs2words(_retrieve_jobs(test[1].shape[0]))
+            # import pdb; pdb.set_trace()
             with open(saveto+'.test.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'

@@ -48,11 +48,11 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, datasets='dev,test
 
     # fetch data, skip ones we aren't using to save time
     load_data, prepare_data = get_dataset(options['dataset'])
-    train, valid, test, worddict = load_data(path='./data/flickr8k/', load_train=True if 'train' in datasets else False,
+    train, valid, test, worddict = load_data(path='./data/coco/', load_train=True if 'train' in datasets else False,
                                              load_dev=True if 'dev' in datasets else False,
                                              load_test=True if 'test' in datasets else False)
     
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     # <eos> means end of sequence (aka periods), UNK means unknown
     word_idict = dict()
     for kk, vv in worddict.iteritems():
@@ -96,14 +96,14 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, datasets='dev,test
         if dd == 'train':
             print 'Training Set...',
             caps = _seqs2words(_process_examples(train[1]))
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             with open(saveto+'.train.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'
         if dd == 'dev':
             print 'Development Set...',
             caps = _seqs2words(_process_examples(valid[1]))
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             with open(saveto+'.dev.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'
