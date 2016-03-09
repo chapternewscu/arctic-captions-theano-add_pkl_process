@@ -7,6 +7,8 @@ import time
 import numpy
 from scipy.sparse import csr_matrix
 
+experimentPrefix = '.exp1'
+
 def save_sparse_csr(filename,array):
     numpy.savez(filename,data = array.data ,indices=array.indices,
              indptr =array.indptr, shape=array.shape )
@@ -82,19 +84,19 @@ def load_data(load_train=True, load_dev=True, load_test=True, path='./data/coco/
     test = None
 
     if load_train:
-        with open(path+'coco_align.train.pkl', 'rb') as f:
+        with open(path+'coco_align.train' + experimentPrefix + '.pkl', 'rb') as f:
             train_cap = pkl.load(f)
-        train_feat = load_sparse_csr(path+'coco_feature.train.npz')
+        train_feat = load_sparse_csr(path+'coco_feature.train' + experimentPrefix + '.npz')
         train = (train_cap, train_feat)
 
     if load_dev:
-        with open(path+'coco_align.dev.pkl', 'rb') as f:
+        with open(path+'coco_align.dev' + experimentPrefix + '.pkl', 'rb') as f:
             dev_cap = pkl.load(f)
             dev_feat = pkl.load(f)
         valid = (dev_cap, dev_feat)
 
     if load_test:
-        with open(path+'coco_align.test.pkl', 'rb') as f:
+        with open(path+'coco_align.test' + experimentPrefix + '.pkl', 'rb') as f:
             test_cap = pkl.load(f)
             test_feat = pkl.load(f)
         test = (test_cap, test_feat)

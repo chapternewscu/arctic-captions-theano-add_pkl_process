@@ -2,6 +2,9 @@
 Example execution script. The dataset parameter can
 be modified to coco/flickr30k/flickr8k
 """
+
+experimentPrefix = '.exp1'
+
 import argparse
 
 from capgen import train
@@ -52,7 +55,7 @@ def main(params):
 if __name__ == "__main__":
     # These defaults should more or less reproduce the soft
     # alignment model for the MS COCO dataset
-    defaults = {"model": "coco_deterministic_model.npz",
+    defaults = {"model": "coco_deterministic_model" + experimentPrefix + ".npz",
                 "attn-type": "deterministic",
                 "dim-word": 512,
                 "ctx-dim": 512,
